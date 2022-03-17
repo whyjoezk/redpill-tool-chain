@@ -5,10 +5,10 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'docker/**'
-      - '**.sh'
-      - '**.json'
+#     paths:
+#       - 'docker/**'
+#       - '**.sh'
+#       - '**.json'
 
 jobs:
   build:
