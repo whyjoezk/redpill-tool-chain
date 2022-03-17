@@ -82,6 +82,7 @@ jobs:
         run: |
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-acpid/rpext-index.json
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-virtio/rpext-index.json
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/main/vmxnet3/rpext-index.json
 
       - name: 添加扩展驱动[dva3221]
         if: matrix.platform == 'dva3221'
@@ -118,4 +119,10 @@ jobs:
           repository: ${{ github.repository }}
           retain_days: 3
           keep_minimum_runs: 6
-
+      - name: Upload release asset
+        uses: svenstaro/upload-release-action@d8cafc3c8751f88ceb949832cb42148798fb08d9
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./images/redpill-*.img
+          tag: dsm-${{matrix.platform}}-${{matrix.version}}
+          file_glob: true
