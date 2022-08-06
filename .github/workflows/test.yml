@@ -10,10 +10,10 @@ on:
   push:
     branches:
       - master
-    paths:
-      - "docker/**"
-      - "**.sh"
-      - "**.json"
+#     paths:
+#       - "docker/**"
+#       - "**.sh"
+#       - "**.json"
 
 jobs:
   build:
@@ -116,6 +116,7 @@ jobs:
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-boot-wait.json
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-acpid.json
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-virtio.json
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/main/vmxnet3/rpext-index.json
 
       - name: 添加扩展驱动[dva3221]
         if: matrix.platform == 'dva3221'
@@ -153,6 +154,14 @@ jobs:
           name: dsm-${{matrix.platform}}-${{matrix.version}}
           path: images/redpill-*.img
           if-no-files-found: error
+      
+      - name: Upload release asset
+        uses: svenstaro/upload-release-action@d8cafc3c8751f88ceb949832cb42148798fb08d9
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./images/redpill-*.img
+          tag: dsm-${{matrix.platform}}-${{matrix.version}}
+          file_glob: true
 
       - name: 删除旧的工作流
         uses: Mattraks/delete-workflow-runs@v2
